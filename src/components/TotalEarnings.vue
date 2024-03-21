@@ -59,7 +59,10 @@ function showProgrammes() {
       </span>
       <span class="lotus-text text-black text-center mb-6">Нажимая кнопку «Завершить» вы останавливаете процесс программы, тем самым останавливая накопления инвестиционного счёта</span>
       <div class="d-flex justify-center">
-        <button class="lotus-button2">
+        <button
+          class="lotus-button2"
+          @click="endProgramDialog = false"
+        >
           Не завершать
         </button>
         <button
