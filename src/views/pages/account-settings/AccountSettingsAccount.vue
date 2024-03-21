@@ -136,17 +136,18 @@ const verifyUser = () => {
     v-model="verificationDialog"
     max-width="400"
   >
-    <VCard class="pa-6">
+    <VCard class="pa-8">
       <span class="lotus-h1 text-black">
         Верификация
       </span>
-      <p class="lotus-text text-black mt-4">
-        Загрузите фото: <br>
-        • Паспорта (разворот 1 и 2 стр.) <br>
-        • Селфи с открытым документов в руках
+      <p class="lotus-text text-black mt-4 mb-2">
+        Загрузите фото:
       </p>
-      <p class="lotus-text text-center mt-4">
-        Вставьте фото в форму или нажмите на поле для загрузки файлов
+      <p class="lotus-text text-black mb-2">
+        • Паспорта (разворот 1 и 2 стр.)
+      </p>
+      <p class="lotus-text text-black mb-2">
+        • Селфи с открытым документов в руках
       </p>
       <div class="drop-zone-container mb-4">
         <div
@@ -184,6 +185,9 @@ const verifyUser = () => {
           >
         </div>
       </div>
+      <p class="lotus-text text-center mt-4">
+        Вставьте фото в форму или нажмите на поле для загрузки файлов
+      </p>
       <button
         class="lotus-button1"
         @click="verifyUser"

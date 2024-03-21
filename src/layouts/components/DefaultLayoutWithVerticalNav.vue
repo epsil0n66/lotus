@@ -2,7 +2,7 @@
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
-
+import NumberAnimation from "vue-number-animation"
 
 const $api = inject('api')
 
@@ -28,6 +28,10 @@ $api.getBalance()
   .then(res => {
     balance.value = res.data.available_balance
   })
+
+const theFormat = value => {
+  return value.toFixed(2)
+}
 
 function onInput(event) {
   let value = event.target.value.replace(/[^\d.]/g, '')
@@ -133,7 +137,16 @@ function startRedeem() {
         >100$</span> </span>
         <VSpacer />
 
-        <span class="mx-3 lotus-h1 text-black">{{ balance.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} $</span>
+        <span class="mx-3 lotus-h1 text-black">
+          <NumberAnimation
+            ref="number1"
+            :from="100"
+            :to="balance"
+            :format="theFormat"
+            :duration="1"
+            autoplay
+            easing="linear"
+          /> $</span>
         <button
           class="lotus-button1"
           :disabled="balance < 100"

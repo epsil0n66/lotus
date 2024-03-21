@@ -3,6 +3,7 @@ import coins from '@images/svg/coins.svg'
 import graph from '@images/svg/graph.svg'
 import wallet from '@images/svg/wallet.svg'
 import { ref } from 'vue'
+import NumberAnimation from "vue-number-animation"
 
 const $api = inject('api')
 
@@ -72,7 +73,16 @@ function showProgrammes() {
             <div class="px-6 py-4">
               <div class="d-flex align-center justify-space-between pb-4">
                 <img :src="wallet">
-                <span class="lotus-h1 text-black">{{ totalInvested.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} $</span>
+                <span class="lotus-h1 text-black">
+                  <NumberAnimation
+                    ref="number3"
+                    :from="1"
+                    :to="totalInvested"
+                    :format="value => value.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 })"
+                    :duration="1"
+                    autoplay
+                    easing="linear"
+                  /> $</span>
               </div>
               <span class="lotus-text">Вложено в: <span @click="showProgrammes">{{ totalPrograms }} программы</span></span>
             </div>
@@ -87,7 +97,16 @@ function showProgrammes() {
             <div class="px-6 py-4">
               <div class="d-flex align-center justify-space-between pb-4">
                 <img :src="coins">
-                <span class="lotus-h1 text-black">{{ totalEarned.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} $</span>
+                <span class="lotus-h1 text-black">
+                  <NumberAnimation
+                    ref="number2"
+                    :from="1"
+                    :to="totalEarned"
+                    :format="value => value.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 })"
+                    :duration="1"
+                    autoplay
+                    easing="linear"
+                  /> $</span>
               </div>
               <span class="lotus-text">Заработано: </span>
             </div>
@@ -102,7 +121,16 @@ function showProgrammes() {
             <div class="px-6 py-4">
               <div class="d-flex align-center justify-space-between pb-4">
                 <img :src="graph">
-                <span class="lotus-h1 text-black">{{ totalBalance.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} $</span>
+                <span class="lotus-h1 text-black">
+                  <NumberAnimation
+                    ref="number2"
+                    :from="1"
+                    :to="totalBalance"
+                    :format="value => value.toLocaleString('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 })"
+                    :duration="1"
+                    autoplay
+                    easing="linear"
+                  /> $</span>
               </div>
               <span class="lotus-text">Общий баланс </span>
             </div>

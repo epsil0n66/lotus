@@ -23,6 +23,8 @@ const investDialog = ref(false)
 
 const investSum = ref(null)
 
+const tariffOnHover = ref(null)
+
 function confirm () {
   investDialog.value = false
 
@@ -38,7 +40,7 @@ function confirm () {
 <template>
   <VDialog
     v-model="investDialog"
-    max-width="600"
+    max-width="400"
     @click:outside="investDialog = false"
   >
     <VCard class="pa-8">
@@ -47,7 +49,7 @@ function confirm () {
       </span>
       <VTextField
         v-model.number="investSum"
-        class="pb-4"
+        class="my-6"
         autofocus
         label="Сумма инвестиции"
         placeholder="2000"
@@ -68,6 +70,7 @@ function confirm () {
       :key="tariffPlan.id"
       cols="12"
       md="4"
+      @click="tariffOnHover = tariffPlan"
     >
       <VCard class="px-6 py-4 d-flex flex-row">
         <div>
@@ -116,6 +119,35 @@ function confirm () {
             </VRow>
           </template>
         </VProgressCircular>
+      </VCard>
+    </VCol>
+  </VRow>
+  <VRow v-if="tariffOnHover">
+    <VCol
+      cols="12"
+      md="12"
+    >
+      <VCard class="text-center text-sm-start">
+        <VRow no-gutters>
+          <VCol
+            cols="12"
+            sm="8"
+          >
+            <VCardItem>
+              <span class="lotus-h1 text-black">
+                {{ tariffOnHover.name }}
+              </span>
+            </VCardItem>
+
+            <VCardText>
+              <span class="lotus-text text-black">
+                {{ tariffOnHover.description.full_description }}
+              </span> 
+             
+              <br>
+            </VCardText>
+          </VCol>
+        </VRow>
       </VCard>
     </VCol>
   </VRow>
