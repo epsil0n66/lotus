@@ -29,6 +29,16 @@ $api.getBalance()
     balance.value = res.data.available_balance
   })
 
+const interval = setInterval(() => {
+  $api.getBalance()
+    .then(res => {
+      balance.value = res.data.available_balance
+    })
+}, 60000)
+
+
+onUnmounted(() => clearInterval(interval))
+
 const theFormat = value => {
   return value.toFixed(2)
 }

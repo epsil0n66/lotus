@@ -27,10 +27,21 @@ $api.getUserInvestments()
     totalInvested.value = res.data.total_invested
     programmesInfo.value.push(...res.data.tariff_plans)
   })
+
 $api.getEarningsSummary()
   .then(res => {
     totalEarned.value = res.data.total_earnings
   })
+    
+const interval = setInterval(() => {
+  $api.getEarningsSummary()
+    .then(res => {
+      totalEarned.value = res.data.total_earnings
+    })
+}, 60000)
+
+onUnmounted(() => clearInterval(interval))
+
 function showProgrammes() {
   programmesShown.value = !programmesShown.value
 }
