@@ -12,6 +12,14 @@ const redeemWallet = ref('')
 const redeemStatus = ref('idle')
 const redeemDialogTitle = ref('Вывод средств')
 
+const isAuth = ref(localStorage.getItem('token') !== null)
+
+const logout = () => {
+  localStorage.removeItem('token')
+  isAuth.value = false
+  window.location.reload()
+}
+
 const balance = ref(0)
 
 const texts = JSON.parse(localStorage.getItem('texts'))
@@ -170,6 +178,7 @@ function startRedeem() {
         }"
       />
       <VerticalNavLink
+        v-if="!isAuth"
         :item="{
           title: 'Login',
           icon: 'bx-log-in',
@@ -177,11 +186,20 @@ function startRedeem() {
         }"
       />
       <VerticalNavLink
+        v-if="!isAuth"
         :item="{
           title: 'Register',
           icon: 'bx-user-plus',
           to: '/register',
         }"
+      />
+      <VerticalNavLink
+        v-if="isAuth"
+        :item="{
+          title: 'Logout',
+          icon: 'bx-error',
+        }"
+        @click="logout"
       />
     </template>
 

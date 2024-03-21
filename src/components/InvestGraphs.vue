@@ -7,7 +7,15 @@ const tariffPlans = ref([])
 
 $api.getTariffPlans()
   .then(res => {
-    tariffPlans.value = res.data
+    const data = res.data
+
+    data[0].color = '#696CFF'
+    data[0].threshold = 2000
+    data[1].color = '#00CE2D'
+    data[1].threshold = 5000
+    data[2].color = '#FFAB00'
+    data[2].threshold = 15000
+    tariffPlans.value = data
   })
 
 const currentTariff = ref({})
@@ -24,9 +32,6 @@ function confirm () {
   }
 
   $api.subscribeToTariffPlan(data)
-    .then(res => {
-      console.log(res)
-    })
 }
 </script>
 
@@ -38,7 +43,7 @@ function confirm () {
   >
     <VCard class="pa-8">
       <span class="lotus-h1 text-black">
-        Программа: {{ currentTariff.name }} 
+        Программа: <span :style="`color: ${currentTariff.color}`">{{ currentTariff.name }}</span>
       </span>
       <VTextField
         v-model.number="investSum"
@@ -66,7 +71,10 @@ function confirm () {
     >
       <VCard class="px-6 py-4 d-flex flex-row">
         <div>
-          <span class="lotus-h1 text-black">{{ tariffPlan.name }}</span>
+          <span
+            class="lotus-h1"
+            :style="`color: ${tariffPlan.color}`"
+          >{{ tariffPlan.name }}</span>
           <p class="lotus-text text-black">
             Стабильный рост
           </p>
@@ -74,7 +82,7 @@ function confirm () {
             <span class="text-medium-emphasis lotus-text">
               От
             </span>
-            <span class="lotus-h1 text-black">2000 $</span>
+            <span class="lotus-h1 text-black">{{ tariffPlan.threshold }} $</span>
           </p>
           <button
             class="lotus-button3"
@@ -89,7 +97,7 @@ function confirm () {
           :rotate="360"
           :size="150"
           :width="10"
-          color="primary"
+          :style="`color: ${tariffPlan.color} !important`"
         >
           <template #default>
             <VRow>

@@ -122,7 +122,7 @@ export default {
     return await response
   },
   async getTariffPlans() {
-    const response = await api.get(`https://lotusinvest.world/api/tariff-plans/ru`)
+    const response = await api.get(`https://lotusinvest.world/api/tariff-plans`)
     
     return await response
   },
