@@ -161,7 +161,7 @@ const verifyUser = () => {
           <input
             ref="fileInput"
             type="file"
-            style="display: none"
+            style="display: none;"
             @change="uploadFile(zone, $event)"
           >
           <button
@@ -207,7 +207,7 @@ const verifyUser = () => {
         </p>
         <VRow
           v-if="!accountData.verified"  
-          style="border: 1px solid #E0E0E0; border-radius: 16px;"
+          style="border: 1px solid #e0e0e0; border-radius: 16px;"
           class="ma-1"
         >
           <VCol
@@ -241,13 +241,13 @@ const verifyUser = () => {
         </VRow>
         <VRow
           v-else
-          style="border: 1px solid #00C02D; border-radius: 16px;"
+          style="border: 1px solid #00c02d; border-radius: 16px;"
           class="ma-1"
         >
           <VCol cols="12">
             <span
               class="lotus-text"
-              style="color: #00CE2D"
+              style="color: #00ce2d;"
             ><img :src="verifiedIcon"> Верифицирован</span>
           </VCol>
         </VRow>
@@ -259,14 +259,17 @@ const verifyUser = () => {
           >
             <VTextField
               v-model="accountData.last_name"
+              class="mb-4"
               label="Фамилия"
             />
             <VTextField
               v-model="accountData.first_name"
+              class="mb-4"
               label="Имя"
             />
             <VTextField
               v-model="accountData.patronymic"
+              class="mb-4"
               label="Отчество"
             />
           </VCol>
@@ -276,6 +279,7 @@ const verifyUser = () => {
           >
             <VSelect
               v-model="accountData.country"
+              class="mb-4"
               :items="countries"
               label="Страна"
             />
@@ -305,7 +309,7 @@ const verifyUser = () => {
         </p>
         <span
           class="text-black"
-          style="background-color: #E7E7FF; border-radius: 8px; padding: 8px 12px 8px 12px;"
+          style=" padding: 8px 12px; border-radius: 8px;background-color: #e7e7ff;"
         >
           {{ referralCode }} <img
             :src="copyIcon"
@@ -327,25 +331,26 @@ const verifyUser = () => {
 .drop-zone {
   position: relative;
   border: 2px dashed #ccc;
-  text-align: center;
   border-radius: 8px;
-  width: 80px;
-  height: 80px;
+  block-size: 80px;
+  inline-size: 80px;
+  text-align: center;
 }
 
 .drop-zone img {
-  max-width: 100%;
-  max-height: 100%;
+  max-block-size: 100%;
+  max-inline-size: 100%;
   object-fit: cover;
 }
 
 .clear-btn {
   position: absolute;
-  right: 0px;
   border: none;
-  background: #ff6666;
+  background: #f66;
   color: white;
   cursor: pointer;
-  padding: 2px 6px;
+  inset-inline-end: 0;
+  padding-block: 2px;
+  padding-inline: 6px;
 }
 </style>

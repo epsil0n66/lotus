@@ -50,6 +50,12 @@ function confirm () {
         <VCard class="text-center text-sm-start">
           <VRow no-gutters>
             <VCol cols="12">
+              <VBtn
+                icon="mdi-close"
+                style=" z-index: 1;float: inline-end;"
+                variant="text"
+                @click="tariffOnHover = false"
+              />
               <VCardItem>
                 <span class="lotus-h1 text-black">
                   {{ tariffOnHover.name }}
