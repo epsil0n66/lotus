@@ -23,14 +23,16 @@ api.interceptors.request.use(async config => {
 api.interceptors.response.use(response => {
   return response
 }, function (error) {
-  toast(`Error: ${error.response.status}`, {
-    "theme": "auto",
-    "type": "error",
-  })
   if (error.response.status === 401) {
     localStorage.removeItem('token')
     localStorage.removeItem('refresh')
     window.location.href = '/login'
+  } else {
+    toast(`Error: ${error.response.status} \n ${error?.response?.data?.error}`, {
+      "theme": "auto",
+      "type": "error",
+      "dangerouslyHTMLString": true,
+    })
   }
   
   return Promise.reject(error)
@@ -107,8 +109,15 @@ export default {
     
     return await response
   },
-  async getEarnings() {
-    const response = await api.get(`https://lotusinvest.world/api/earnings-history/`)
+  async getEarnings(page) {
+    let response
+    if (page) {
+      response = await api.get(`https://lotusinvest.world/api/earnings-history/?page=${page}`)
+      
+      return await response
+    } else {
+      response = await api.get(`https://lotusinvest.world/api/earnings-history/`)
+    }
     
     return await response
   },

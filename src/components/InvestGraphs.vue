@@ -39,6 +39,37 @@ function confirm () {
 
 <template>
   <VDialog
+    v-model="tariffOnHover"
+    width="400"
+  >
+    <VRow v-if="tariffOnHover">
+      <VCol
+        cols="12"
+        md="12"
+      >
+        <VCard class="text-center text-sm-start">
+          <VRow no-gutters>
+            <VCol cols="12">
+              <VCardItem>
+                <span class="lotus-h1 text-black">
+                  {{ tariffOnHover.name }}
+                </span>
+              </VCardItem>
+
+              <VCardText>
+                <span class="lotus-text text-black">
+                  {{ tariffOnHover.description.full_description }}
+                </span> 
+             
+                <br>
+              </VCardText>
+            </VCol>
+          </VRow>
+        </VCard>
+      </VCol>
+    </VRow>
+  </VDialog>
+  <VDialog
     v-model="investDialog"
     max-width="400"
     @click:outside="investDialog = false"
@@ -70,6 +101,7 @@ function confirm () {
       :key="tariffPlan.id"
       cols="12"
       md="4"
+      class="cursor-pointer"
       @click="tariffOnHover = tariffPlan"
     >
       <VCard class="px-6 py-4 d-flex flex-row">
@@ -89,7 +121,7 @@ function confirm () {
           </p>
           <button
             class="lotus-button3"
-            @click="investDialog = true; currentTariff = tariffPlan"
+            @click.stop="investDialog = true; currentTariff = tariffPlan"
           >
             Инвестировать
           </button>
@@ -110,7 +142,7 @@ function confirm () {
               >
                 <span
                   class="lotus-h1"
-                  style="font-size: 24px"
+                  style="font-size: 24px;"
                 >{{ Number(tariffPlan.rate).toFixed(0) }}%</span>
                 <p class="text-medium-emphasis text-caption mb-0">
                   Годовых
@@ -119,35 +151,6 @@ function confirm () {
             </VRow>
           </template>
         </VProgressCircular>
-      </VCard>
-    </VCol>
-  </VRow>
-  <VRow v-if="tariffOnHover">
-    <VCol
-      cols="12"
-      md="12"
-    >
-      <VCard class="text-center text-sm-start">
-        <VRow no-gutters>
-          <VCol
-            cols="12"
-            sm="8"
-          >
-            <VCardItem>
-              <span class="lotus-h1 text-black">
-                {{ tariffOnHover.name }}
-              </span>
-            </VCardItem>
-
-            <VCardText>
-              <span class="lotus-text text-black">
-                {{ tariffOnHover.description.full_description }}
-              </span> 
-             
-              <br>
-            </VCardText>
-          </VCol>
-        </VRow>
       </VCard>
     </VCol>
   </VRow>

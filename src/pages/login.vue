@@ -7,18 +7,26 @@ const router = useRouter()
 
 const $api = inject('api')
 
+const valid = ref(false)
+const isLoading = ref(false)
+
 const form = ref({
-  email: 'demo@example.com',
-  password: 'demo',
+  email: null,
+  password: null,
 })
 
 function login () {
+  if (!valid.value) return
+  isLoading.value = true
   $api.login(form.value)
     .then(() => {
       router.push('/')
     })
     .catch(e => {
       console.log(e)
+    })
+    .finally(() => {
+      isLoading.value = false
     })
 }
 const isPasswordVisible = ref(false)
@@ -55,7 +63,10 @@ const isPasswordVisible = ref(false)
       </VCardText>
 
       <VCardText>
-        <VForm @submit.prevent="login(form)">
+        <VForm
+          v-model="valid"
+          @submit.prevent="login(form)"
+        >
           <VRow>
             <!-- email -->
             <VCol cols="12">
@@ -65,6 +76,7 @@ const isPasswordVisible = ref(false)
                 placeholder="johndoe@email.com"
                 label="Email"
                 type="email"
+                :rules="[() => !!form.email || 'Field is required']"
               />
             </VCol>
 
@@ -75,6 +87,7 @@ const isPasswordVisible = ref(false)
                 label="Password"
                 placeholder="············"
                 :type="isPasswordVisible ? 'text' : 'password'"
+                :rules="[() => !!form.password || 'Field is required']"
                 :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
@@ -94,13 +107,18 @@ const isPasswordVisible = ref(false)
                 </RouterLink>
               </div>
 
-              <!-- login button -->
-              <VBtn
-                block
+              <button
+                class="lotus-button1 mt-6 w-100 text-white"
                 type="submit"
+                :class="{ 'loading': isLoading }"
+                :disabled="isLoading"
               >
-                Login
-              </VBtn>
+                <span
+                  v-if="isLoading"
+                  class="loader"
+                />
+                <span v-else>Sign in</span>
+              </button>
             </VCol>
 
             <!-- create account -->

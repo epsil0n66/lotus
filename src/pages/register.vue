@@ -1,17 +1,35 @@
 <script setup>
 import logo from '@images/logo.svg?raw'
 import { inject } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const $api = inject('api')
 
 const form = ref({
-  email: 'demo@example.com',
-  name: 'demo',
-  phone: "79111231212",
-  password: 'demo',
-  referral_code: "89823125",
+  email: null,
+  name: null,
+  phone: null,
+  password: null,
+  referral_code: null,
 })
 
+
+const valid = ref(false)
+const isLoading = ref(false)
+function register () {
+  if (!valid.value) return
+  isLoading.value = true
+  $api.register(form.value)
+    .then(() => {
+      isLoading.value = false
+      router.push('/login')
+    })
+    .catch(e => {
+      console.log(e)
+      isLoading.value = false
+    })
+}
 const isPasswordVisible = ref(false)
 </script>
 
@@ -43,7 +61,10 @@ const isPasswordVisible = ref(false)
       </VCardText>
 
       <VCardText>
-        <VForm @submit.prevent="$api.register(form)">
+        <VForm
+          v-model="valid"
+          @submit.prevent="register"
+        >
           <VRow>
             <!-- Name -->
             <VCol cols="12">
@@ -51,7 +72,7 @@ const isPasswordVisible = ref(false)
                 v-model="form.name"
                 autofocus
                 label="Name"
-                placeholder="Johndoe"
+                :rules="[(v) => !!v || 'Field is required']"
               />
             </VCol>
             <!-- email -->
@@ -59,8 +80,8 @@ const isPasswordVisible = ref(false)
               <VTextField
                 v-model="form.email"
                 label="Email"
-                placeholder="johndoe@email.com"
                 type="email"
+                :rules="[(v) => !!v || 'Field is required']"
               />
             </VCol>
             <!-- email -->
@@ -68,15 +89,15 @@ const isPasswordVisible = ref(false)
               <VTextField
                 v-model="form.phone"
                 label="Phone"
-                placeholder="+ 7 (999) 999-99-99"
                 type="phone"
+                :rules="[(v) => !!v || 'Field is required']"
               />
             </VCol>
             <VCol cols="12">
               <VTextField
                 v-model="form.referral_code"
                 label="Referral code"
-                placeholder="Referral code"
+                :rules="[(v) => !!v || 'Field is required']"
               />
             </VCol>
             <!-- password -->
@@ -87,16 +108,22 @@ const isPasswordVisible = ref(false)
                 placeholder="············"
                 :type="isPasswordVisible ? 'text' : 'password'"
                 :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+                :rules="[(v) => !!v || 'Field is required']"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
 
-              <VBtn
-                class="mt-6"
-                block
+              <button
+                class="lotus-button1 mt-6 w-100 text-white"
                 type="submit"
+                :class="{ 'loading': isLoading }"
+                :disabled="isLoading"
               >
-                Sign up
-              </VBtn>
+                <span
+                  v-if="isLoading"
+                  class="loader"
+                />
+                <span v-else>Sign up</span>
+              </button>
             </VCol>
 
             <!-- login instead -->

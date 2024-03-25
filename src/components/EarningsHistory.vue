@@ -8,11 +8,24 @@ const { mobile } = useDisplay()
 
 
 const earningsHistory = ref([])
+const earningsPage = ref(1)
+const earningsLastPage = ref(1)
+const earningsPageSize = ref(10)
+const isNextPage = ref(false)
+const isPrevPage = ref(false)
 
-$api.getEarnings()
-  .then(res => {
-    earningsHistory.value = res.data.results
-  })
+const getEarnings = page => {
+  $api.getEarnings(page)
+    .then(res => {
+      earningsPage.value = page
+      earningsHistory.value = res.data.results
+      earningsLastPage.value = Math.ceil(res.data.count / earningsPageSize.value)
+      isNextPage.value = res.data.next !== null
+      isPrevPage.value = res.data.previous !== null
+    })
+}
+
+getEarnings(earningsPage.value)
 </script>
 
 <template>
@@ -80,12 +93,18 @@ $api.getEarnings()
         cols="12"
         md="6"
       >
-        <button class="lotus-button2">
+        <button
+          class="lotus-button2"
+          :disabled="!isPrevPage"
+          @click="getEarnings(earningsPage - 1)"
+        >
           ← Назад
         </button>
         <button
           class="lotus-button2"
+          :disabled="!isNextPage"
           style="margin-left: 12px;"
+          @click="getEarnings(earningsPage + 1)"
         >
           Вперед →
         </button>
@@ -95,7 +114,7 @@ $api.getEarnings()
         md="6"
         class="d-flex justify-end"
       >
-        <span>Стр. <span class="page mx-2"> 1 </span> из 999</span>
+        <span>Стр. <span class="page mx-2"> {{ earningsPage }} </span> из {{ earningsLastPage }}</span>
       </VCol>
     </VRow>
   </VCard>
