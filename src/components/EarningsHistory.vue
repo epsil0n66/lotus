@@ -1,7 +1,11 @@
 <script setup>
 import { inject, ref } from 'vue'
+import { useDisplay } from 'vuetify'
 
 const $api = inject('api')
+
+const { mobile } = useDisplay()
+
 
 const earningsHistory = ref([])
 
@@ -14,59 +18,62 @@ $api.getEarnings()
 <template>
   <VCard class="pa-6 my-4">
     <span class="lotus-h1 text-black">История действий</span>
-    <table
-      style="width: 100%;"
-      class="mt-4"
-    >
-      <thead>
-        <tr>
-          <th
-            class="text-left lotus-text text-black"
-            style="border-bottom: 1px solid #E0E0E0;"
-          >
-            Действие
-          </th>
-          <th
-            class="text-left lotus-text text-black"
-            style="border-bottom: 1px solid #E0E0E0;"
-          >
-            Тип
-          </th>
-          <th
-            class="text-left lotus-text text-black"
-            style="border-bottom: 1px solid #E0E0E0;"
-          >
-            Сумма
-          </th>
-          <th
-            class="text-left lotus-text text-black"
-            style="border-bottom: 1px solid #E0E0E0;"
-          >
-            Дата
-          </th>
-        </tr>
-      </thead>
+    <div :style="mobile ? 'overflow-x: auto' : ''">
+      <table
+        :style="mobile ? 'width: 700px;' : 'width: 100%'"
+        class="mt-4"
+      >
+        <thead>
+          <tr>
+            <th
+              class="text-left lotus-text text-black"
+              style="border-bottom: 1px solid #e0e0e0;"
+            >
+              Действие
+            </th>
+            <th
+              class="text-left lotus-text text-black"
+              style="border-bottom: 1px solid #e0e0e0;"
+            >
+              Тип
+            </th>
+            <th
+              class="text-left lotus-text text-black"
+              style="border-bottom: 1px solid #e0e0e0;"
+            >
+              Сумма
+            </th>
+            <th
+              class="text-left lotus-text text-black"
+              style="border-bottom: 1px solid #e0e0e0;"
+            >
+              Дата
+            </th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr
-          v-for="item in earningsHistory"
-          :key="item"
-        >
-          <td>
-            {{ item.description }}
-          </td>
-          <td>
-            {{ item.type }}
-          </td>
-          <td>
-            {{ item.amount }}
-          </td>
-          <td>
-            {{ item.date }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody>
+          <tr
+            v-for="item in earningsHistory"
+            :key="item"
+          >
+            <td>
+              {{ item.description }}
+            </td>
+            <td>
+              {{ item.type }}
+            </td>
+            <td>
+              {{ item.amount }}
+            </td>
+            <td>
+              {{ item.date }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <VDivider />
     <VRow class="mt-4">
       <VCol
@@ -96,8 +103,9 @@ $api.getEarnings()
 
 <style scoped>
 .page {
-  border-radius: 12px;
   border: 1px solid #e0e0e0;
-  padding: 2px 16px 2px 16px;
+  border-radius: 12px;
+  padding-block: 2px;
+  padding-inline: 16px;
 }
 </style>

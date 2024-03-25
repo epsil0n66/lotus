@@ -1,5 +1,7 @@
 // eslint-disable-next-line regex/invalid
 import axios from 'axios'
+import { toast } from "vue3-toastify"
+import "vue3-toastify/dist/index.css"
 
 
 const api = axios.create({
@@ -21,6 +23,10 @@ api.interceptors.request.use(async config => {
 api.interceptors.response.use(response => {
   return response
 }, function (error) {
+  toast(`Error: ${error.response.status}`, {
+    "theme": "auto",
+    "type": "error",
+  })
   if (error.response.status === 401) {
     localStorage.removeItem('token')
     localStorage.removeItem('refresh')
@@ -34,6 +40,12 @@ api.interceptors.response.use(response => {
 export default {
   async register(data) {
     const response = await api.post(`https://lotusinvest.world/api/register/`, data)
+    if (response.status === 201) {
+      toast(`Registered successfully`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
     
     return await response
   },
@@ -43,7 +55,13 @@ export default {
 
     localStorage.setItem('token', response.data.access)
     localStorage.setItem('refresh', response.data.refresh)
-      
+    if (response.status === 200) {
+      toast(`Autheticated successfully`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
+    
     return response
   },
   async getBalance() {
@@ -59,6 +77,13 @@ export default {
   async verifyUser(data) {
     const response = await api.post(`https://lotusinvest.world/api/verify-user/`, data)
     
+    if (response.status === 201) {
+      toast(`Verification request sent`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
+
     return await response
   },
   async getUser() {
@@ -68,6 +93,13 @@ export default {
 
     const response = await api.put(`https://lotusinvest.world/api/user/`, data)
     
+    if (response.status === 200) {
+      toast(`Updated successfully`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
+
     return await response
   },
   async getReferralCode() {
@@ -129,10 +161,25 @@ export default {
   async subscribeToTariffPlan(data) {
     const response = await api.post(`https://lotusinvest.world/api/user-tariff-plan/`, data)
     
+    if (response.status === 201) {
+      toast(`Subscribed successfully`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
+    
+
     return await response
   },
   async withdraw(data) {
     const response = await api.post(`https://lotusinvest.world/api/withdraw/`, data)
+
+    if (response.status === 201) {
+      toast(`Withdrawal requested successfully`, {
+        "theme": "auto",
+        "type": "success",
+      })
+    }
     
     return await response
   },

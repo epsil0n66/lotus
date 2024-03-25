@@ -3,7 +3,9 @@ import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTit
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import NumberAnimation from "vue-number-animation"
+import { useDisplay } from 'vuetify'
 
+const display = ref(useDisplay())
 const $api = inject('api')
 
 const redeemDialog = ref(false)
@@ -134,16 +136,22 @@ function startRedeem() {
         </IconBtn>
 
         <!-- 👉 Search -->
-        <span class="lotus-h1 text-black">Мой баланс к выводу</span>
-
+        <span
+          v-if="display.mdAndUp"
+          class="lotus-h1 text-black"
+        >Мой баланс к выводу</span>
+        <span
+          v-else
+          class="lotus-h1 text-black"
+        >Баланс</span>
         <VSpacer />
         <span
           v-if="balance < 100"
           class="lotus-text"
-          style="border-radius: 8px; background-color: #FFAB0033; padding: 3px 16px 4px 16px;"
+          style=" padding: 3px 16px 4px;border-radius: 8px; background-color: #ffab0033;"
         >Вывод средств доступен от <span
           class="lotus=text"
-          style="color: #FFAB00;"
+          style="color: #ffab00;"
         >100$</span> </span>
         <VSpacer />
 

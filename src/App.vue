@@ -15,43 +15,57 @@ const { global } = useTheme()
 .lotus-h1 {
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 0;
   line-height: 24px;
-  letter-spacing: 0em;
+
+  @media screen and (max-width: 600px) {
+    font-size: 16px;
+  }
 }
+
 .lotus-text {
   font-size: 14px;
   font-weight: 400;
+  letter-spacing: 0;
   line-height: 17px;
-  letter-spacing: 0em;
 }
+
 .lotus-button1 {
-  padding: 10px 24px 10px 24px;
-  color: white;
-  background-color: #696CFF;
   border-radius: 12px;
+  background-color: #696cff;
+  color: white;
+  padding-block: 10px;
+  padding-inline: 24px;
 }
+
 .lotus-button1:hover {
   background-color: #999bfa;
 }
+
 .lotus-button2 {
-  padding: 10px 24px 10px 24px;
-  color: #696CFF;
-  background-color: white;
+  border: 1px solid #696cff;
   border-radius: 12px;
-  border: 1px solid #696CFF;
+  background-color: white;
+  color: #696cff;
+  padding-block: 10px;
+  padding-inline: 24px;
 }
+
 .lotus-button3 {
-  padding: 12px 16px 12px 16px;
-  color: black;
-  background-color: white;
-  border-radius: 12px;
   border: 1px solid black;
+  border-radius: 12px;
+  background-color: white;
+  color: black;
+  padding-block: 12px;
+  padding-inline: 16px;
 }
+
 .lotus-button4 {
-  padding: 2px 14px 3px 14px;
+  border: 1px solid #e2261a;
+  border-radius: 7px;
+  color: #e2261a;
   gap: 8px;
-  border-radius: 7px;   
-  border: 1px solid #E2261A;
-  color: #E2261A;
+  padding-block: 2px 3px;
+  padding-inline: 14px;
 }
 </style>

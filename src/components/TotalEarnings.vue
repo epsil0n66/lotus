@@ -4,7 +4,9 @@ import graph from '@images/svg/graph.svg'
 import wallet from '@images/svg/wallet.svg'
 import { ref } from 'vue'
 import NumberAnimation from "vue-number-animation"
+import { useDisplay } from 'vuetify'
 
+const { mobile } = useDisplay()
 const $api = inject('api')
 
 const programmesShown = ref(false)
@@ -161,51 +163,53 @@ function showProgrammes() {
     <VRow>
       <VCol cols="12">
         <span class="lotus-h1 text-black">Мои программы</span>
-        <table
-          style="width: 100%;"
-          class="mt-4"
-        >
-          <thead>
-            <tr>
-              <th class="text-left lotus-text text-black">
-                Программа
-              </th>
-              <th class="text-left lotus-text text-black">
-                Вложения
-              </th>
-              <th class="text-left lotus-text text-black">
-                Дата инвестиций
-              </th>
-              <th class="text-left lotus-text text-black">
-                Заработано
-              </th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="programme in programmesInfo"
-              :key="programme"
-            >
-              <td>{{ programme.tariff_plan_name }}</td>
-              <td class="text-black">
-                {{ programme.amount }} $
-              </td>
-              <td>{{ programme.date_investment }}</td>
-              <td style="color: #00CE2D;">
-                {{ programme.earned }} $
-              </td>
-              <td>
-                <button
-                  class="lotus-button4"
-                  @click="endProgramDialog = true"
-                >
-                  Завершить
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div :style="mobile ? 'overflow-x: auto' : ''">
+          <table
+            :style="mobile ? 'width: 700px;' : 'width: 100%'"
+            class="mt-4"
+          >
+            <thead>
+              <tr>
+                <th class="text-left lotus-text text-black">
+                  Программа
+                </th>
+                <th class="text-left lotus-text text-black">
+                  Вложения
+                </th>
+                <th class="text-left lotus-text text-black">
+                  Дата инвестиций
+                </th>
+                <th class="text-left lotus-text text-black">
+                  Заработано
+                </th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="programme in programmesInfo"
+                :key="programme"
+              >
+                <td>{{ programme.tariff_plan_name }}</td>
+                <td class="text-black">
+                  {{ programme.amount }} $
+                </td>
+                <td>{{ programme.date_investment }}</td>
+                <td style="color: #00ce2d;">
+                  {{ programme.earned }} $
+                </td>
+                <td>
+                  <button
+                    class="lotus-button4"
+                    @click="endProgramDialog = true"
+                  >
+                    Завершить
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </VCol>
     </VRow>
   </VCard>

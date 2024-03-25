@@ -5283,7 +5283,7 @@
   dependencies:
     "shepherd.js" "^11.1.0"
 
-"vue@^2.0.0 || >=3.0.0", "vue@^2.6.12 || ^3.2.4", "vue@^2.6.14 || ^3.3.0", "vue@^2.7.0 || ^3.2.25", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", "vue@^3.0.11", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.3.4", "vue@> 3.0.0", "vue@>=3", "vue@>=3.0.0", "vue@2 || 3", "vue@3.3.4":
+"vue@^2.0.0 || >=3.0.0", "vue@^2.6.12 || ^3.2.4", "vue@^2.6.14 || ^3.3.0", "vue@^2.7.0 || ^3.2.25", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", "vue@^3.0.11", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.3.4", "vue@> 3.0.0", "vue@>=3", "vue@>=3.0.0", "vue@>=3.2.0", "vue@2 || 3", "vue@3.3.4":
   "integrity" "sha512-VTyEYn3yvIeY1Py0WaYGZsXnz3y5UnGi62GjVEqvEGPl6nxbOrCXbVOTQWBEJUqAyTUk2uJ5JLVnYJ6ZzGbrSw=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.3.4.tgz"
   "version" "3.3.4"
@@ -5307,6 +5307,11 @@
     "cssnano" "^5.1.14"
     "perfect-scrollbar" "^1.5.5"
     "postcss-import" "^12.0.0"
+
+"vue3-toastify@^0.2.1":
+  "integrity" "sha512-u4i5LCu1q5qs4L4Kbjb4u8NipCS8ox1fCHQ6XFS62676xnA6Q/AJRpZEkAurTMp723LeH6eQX6k9+24bKf1T4Q=="
+  "resolved" "https://registry.npmjs.org/vue3-toastify/-/vue3-toastify-0.2.1.tgz"
+  "version" "0.2.1"
 
 "vuetify@^3.0.0-beta.4", "vuetify@3.3.1":
   "integrity" "sha512-shmBLeNFjQ9Trf7XusRtKpqCak+EK7zdUiJP2QXbXFgOQP3Ju04iyE/SJWn2xFNYaoJjULWenwOcdlkq9SIZ8A=="
