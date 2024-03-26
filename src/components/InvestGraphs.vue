@@ -25,8 +25,13 @@ const investSum = ref(null)
 
 const tariffOnHover = ref(null)
 
+const valid = ref(false)
+const isLoading = ref(false)
+
 function confirm () {
-  investDialog.value = false
+  if (!valid.value) return
+
+  isLoading.value = true
 
   const data = {
     tariff_plan: currentTariff.value.id,
@@ -34,6 +39,18 @@ function confirm () {
   }
 
   $api.subscribeToTariffPlan(data)
+    .then(() => {
+      isLoading.value = false
+      investDialog.value = false
+    })
+    .catch(e => {
+      console.log(e)
+      isLoading.value = false
+    })
+    .finally(() => {
+      investDialog.value = false
+      investSum.value = null
+    })
 }
 </script>
 
@@ -84,21 +101,32 @@ function confirm () {
       <span class="lotus-h1 text-black">
         Программа: <span :style="`color: ${currentTariff.color}`">{{ currentTariff.name }}</span>
       </span>
-      <VTextField
-        v-model.number="investSum"
-        class="my-6"
-        autofocus
-        label="Сумма инвестиции"
-        placeholder="2000"
-        prefix="$"
-        type="number"
-      />
-      <button
-        class="lotus-button1"
-        @click="confirm"
+      <VForm
+        v-model="valid"
+        @submit.prevent="confirm"
       >
-        Инвестировать
-      </button>
+        <VTextField
+          v-model.number="investSum"
+          class="my-6"
+          autofocus
+          label="Сумма инвестиции"
+          :placeholder="currentTariff.threshold"
+          prefix="$"
+          type="number"
+          :rules="[(v) => !!v || 'Field is required', (v) => v >= currentTariff.threshold || `Must be greater than ${currentTariff.threshold}`]"
+        />
+        <button
+          class="lotus-button1"
+          :class="{ 'loading': isLoading }"
+          :disabled="isLoading"
+        >
+          <span
+            v-if="isLoading"
+            class="loader"
+          />
+          <span v-else>Инвестировать</span>
+        </button>
+      </VForm>
     </VCard>
   </VDialog>   
   <VRow>

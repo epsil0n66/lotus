@@ -35,7 +35,14 @@ const saveChanges = () => {
     phone: accountData.value.phone,
   }
 
+  isLoadingUser.value = true
   $api.updateUser(data)
+    .then(() => {
+      isLoadingUser.value = false
+    })
+    .catch(e => {
+      isLoadingUser.value = false
+    })
 }
 
 function copyReferralCode () {
@@ -104,6 +111,11 @@ const clearImage = zone => {
   images[zone] = null
 }
 
+const validUser = ref(false)
+const isLoadingUser = ref(false)
+const validVerification = ref(false)
+const isLoadingVerification = ref(false)
+
 const verifyUser = () => {
 
   const data = { ...accountData.value }
@@ -112,21 +124,27 @@ const verifyUser = () => {
   data.first_name = 'Demo'
   data.date_of_birth = '2000-01-01'
   data.country = 1
-  data.photo_id = images.first
-  data.photo_selfie = images.second
-  data.photo_additional = images.third
+  data.photo_id = fileInput.value[0].files[0]
+  data.photo_selfie = fileInput.value[1].files[0]
+  data.photo_additional = fileInput.value[2].files[0]
   
   const formData = new FormData()
 
   for (const [key, value] of Object.entries(data)) {
     formData.append(key, value)
   }
+  isLoadingVerification.value = true
+
   $api.verifyUser(formData)
     .then(() => {
+      isLoadingVerification.value = false
       verificationDialog.value = false
       images.first = null
       images.second = null
       images.third = null
+    })
+    .catch(e => {
+      isLoadingVerification.value = false
     })
 }
 </script>
@@ -153,7 +171,7 @@ const verifyUser = () => {
         <div
           v-for="zone in ['first', 'second', 'third']"
           :key="zone"
-          class="drop-zone mx-2"
+          class="drop-zone mx-2 cursor-pointer"
           @click="openFileUpload(zone)"
           @dragover.prevent
           @drop.prevent="handleDrop(zone, $event)"
@@ -190,9 +208,17 @@ const verifyUser = () => {
       </p>
       <button
         class="lotus-button1"
+        :disabled="isLoadingVerification"
+        :class="{ 'loading': isLoadingVerification }"
         @click="verifyUser"
       >
-        Верифицировать
+        <span
+          v-if="isLoadingVerification"
+          class="loader"
+        />
+        <span v-else>
+          Верифицировать
+        </span>
       </button>
     </VCard>
   </VDialog>
@@ -252,49 +278,61 @@ const verifyUser = () => {
           </VCol>
         </VRow>
         <span class="lotus-text">Данные пользователя</span>
-        <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VTextField
-              v-model="accountData.last_name"
-              class="mb-4"
-              label="Фамилия"
-            />
-            <VTextField
-              v-model="accountData.first_name"
-              class="mb-4"
-              label="Имя"
-            />
-            <VTextField
-              v-model="accountData.patronymic"
-              class="mb-4"
-              label="Отчество"
-            />
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VSelect
-              v-model="accountData.country"
-              class="mb-4"
-              :items="countries"
-              label="Страна"
-            />
-            <VTextField
-              v-model="accountData.phone"
-              label="Телефон"
-            />
-          </VCol>
-        </VRow>
-        <button
-          class="mt-6 lotus-button1"
-          @click="saveChanges"
+        
+        <VForm
+          v-model="validUser"
+          @submit.prevent="saveChanges"
         >
-          Сохранить изменения
-        </button>
+          <VRow>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <VTextField
+                v-model="accountData.last_name"
+                class="mb-4"
+                label="Фамилия"
+              />
+              <VTextField
+                v-model="accountData.first_name"
+                class="mb-4"
+                label="Имя"
+              />
+              <VTextField
+                v-model="accountData.patronymic"
+                class="mb-4"
+                label="Отчество"
+              />
+            </VCol>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <VSelect
+                v-model="accountData.country"
+                class="mb-4"
+                :items="countries"
+                label="Страна"
+              />
+              <VTextField
+                v-model="accountData.phone"
+                label="Телефон"
+              />
+            </VCol>
+          </VRow>
+          <button
+            class="mt-6 lotus-button1"
+            :class="{ 'loading': isLoadingUser }"
+            :disabled="isLoadingUser"
+            @click="saveChanges"
+          > 
+            <span
+              v-if="isLoadingUser"
+              class="loader"
+            />
+            <span v-else>Сохранить изменения</span>
+          </button>
+        </VForm>
       </VCol>
     </VRow>
   </VCard>

@@ -14,6 +14,8 @@ const redeemWallet = ref('')
 const redeemStatus = ref('idle')
 const redeemDialogTitle = ref('Вывод средств')
 
+const valid = ref(false)
+
 const isAuth = ref(localStorage.getItem('token') !== null)
 
 const logout = () => {
@@ -51,6 +53,7 @@ function onInput(event) {
   redeemSum.value = value
 }
 function startRedeem() {
+  if (!valid.value) return
   redeemStatus.value = 'pending'
   redeemDialogTitle.value = 'Обработка запроса'
   $api.withdraw({
@@ -60,6 +63,7 @@ function startRedeem() {
     redeemStatus.value = 'success'
     redeemDialogTitle.value = 'Перевод одобрен'
     redeemSum.value = ''
+    redeemWallet.value = ''
   })
 }
 </script>
@@ -74,27 +78,31 @@ function startRedeem() {
         {{ redeemDialogTitle }}
       </span>
       <div v-if="redeemStatus === 'idle'">
-        <VTextField
-          v-model.number="redeemSum"
-          label="Сумма для вывода"
-          prefix="$" 
-          type="number"
-          min="0"
-          @input="onInput"
-        />
-        <VTextField
-          v-model="redeemWallet"
-          class="mb-4"
-          label="Номер кошелька в сети Trc20"
-        />
-        <div class="d-flex justify-center">
-          <button
-            class="lotus-button1"
-            @click="startRedeem"
-          >
-            Подтвердить вывод
-          </button>
-        </div>
+        <VForm
+          v-model="valid"
+          @submit.prevent="startRedeem"
+        >
+          <VTextField
+            v-model.number="redeemSum"
+            label="Сумма для вывода"
+            prefix="$" 
+            type="number"
+            min="0"
+            :rules="[(v) => !!v || 'Field is required', (v) => v >= 100 || 'Must be greater than 100']"
+            @input="onInput"
+          />
+          <VTextField
+            v-model="redeemWallet"
+            class="mb-4"
+            :rules="[(v) => !!v || 'Field is required']"
+            label="Номер кошелька в сети Trc20"
+          />
+          <div class="d-flex justify-center">
+            <button class="lotus-button1">
+              Подтвердить вывод
+            </button>
+          </div>
+        </VForm>
       </div>
       <div v-else-if="redeemStatus === 'pending'">
         <VProgressCircular
