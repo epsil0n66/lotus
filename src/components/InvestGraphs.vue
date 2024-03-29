@@ -28,6 +28,8 @@ const tariffOnHover = ref(null)
 const valid = ref(false)
 const isLoading = ref(false)
 
+const texts = JSON.parse(localStorage.getItem('texts'))
+
 function confirm () {
   if (!valid.value) return
 
@@ -124,7 +126,7 @@ function confirm () {
             v-if="isLoading"
             class="loader"
           />
-          <span v-else>Инвестировать</span>
+          <span v-else>{{ texts.find(t => t.key === 'invest_button')?.text || 'Инвестировать' }}</span>
         </button>
       </VForm>
     </VCard>
@@ -149,7 +151,7 @@ function confirm () {
           </p>
           <p>
             <span class="text-medium-emphasis lotus-text">
-              От
+              {{ texts.find(t => t.key === 'from')?.text || 'От' }}
             </span>
             <span class="lotus-h1 text-black">{{ tariffPlan.threshold }} $</span>
           </p>
@@ -157,7 +159,7 @@ function confirm () {
             class="lotus-button3"
             @click.stop="investDialog = true; currentTariff = tariffPlan"
           >
-            Инвестировать
+            {{ texts.find(t => t.key === 'invest_button')?.text || 'Инвестировать' }}
           </button>
         </div>
         <VSpacer />
@@ -179,7 +181,7 @@ function confirm () {
                   style="font-size: 24px;"
                 >{{ Number(tariffPlan.rate).toFixed(0) }}%</span>
                 <p class="text-medium-emphasis text-caption mb-0">
-                  Годовых
+                  {{ texts.find(t => t.key === 'yearly')?.text || 'Годовых' }}
                 </p>
               </VCol>
             </VRow>

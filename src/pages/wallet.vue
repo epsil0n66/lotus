@@ -7,11 +7,16 @@ const $api = inject('api')
 const wallet = ref('')
 
 const qr = ref('')
+
+const verified = ref(false)
+
+const texts = JSON.parse(localStorage.getItem('texts'))
 function loadWallet() {
   $api.getWallet()
     .then(res => {
       wallet.value = res.data.address
       qr.value = res.data.qr_code
+      verified.value = res.data.verification
     })
 }
 loadWallet()
@@ -31,14 +36,15 @@ loadWallet()
         <p class="lotus-text">
           Адрес
         </p>
-        <p class="lotus-text">
+        <p
+          v-if="!verified"
+          class="lotus-h1"
+          style="color: #c00;"
+        >
+          {{ texts.find(t => t.key === 'wallet_verification_false')?.text || 'Верификация не пройдена' }}
+        </p><p class="lotus-text">
           {{ wallet }}
         </p>
-        <span
-          class="lotus-text text-primary"
-          style="cursor: pointer"
-          @click="loadWallet"
-        >Обновить</span>
       </VCol>
       <VCol
         cols="12"
@@ -46,7 +52,7 @@ loadWallet()
         class="d-flex justify-end"
       >
         <div
-          style="border-radius: 12px; border: 1px solid #696CFF;"
+          style=" border: 1px solid #696cff;border-radius: 12px;"
           v-html="qr"
         />
       </VCol>

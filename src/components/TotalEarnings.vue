@@ -19,6 +19,8 @@ const totalInvested = ref(0)
 const totalPrograms = ref(0)
 const totalEarned = ref(0)
 
+const texts = JSON.parse(localStorage.getItem('texts'))
+
 $api.getTotalBalance()
   .then(res => {
     totalBalance.value = res.data.total_balance
@@ -100,7 +102,7 @@ function showProgrammes() {
                     easing="linear"
                   /> $</span>
               </div>
-              <span class="lotus-text">Вложено в: <span @click="showProgrammes">{{ totalPrograms }} программы</span></span>
+              <span class="lotus-text">{{ texts.find(t => t.key === 'invested_in')?.text || 'Вложено в' }}: <span @click="showProgrammes">{{ totalPrograms }} {{ texts.find(t => t.key === 'programm')?.text || 'программ' }}</span></span>
             </div>
           </VCol>
         </VRow>
@@ -124,7 +126,7 @@ function showProgrammes() {
                     easing="linear"
                   /> $</span>
               </div>
-              <span class="lotus-text">Заработано: </span>
+              <span class="lotus-text">{{ texts.find(t => t.key === 'earned')?.text || 'Заработано' }}: </span>
             </div>
           </VCol>
         </VRow>
@@ -148,7 +150,7 @@ function showProgrammes() {
                     easing="linear"
                   /> $</span>
               </div>
-              <span class="lotus-text">Общий баланс </span>
+              <span class="lotus-text">{{ texts.find(t => t.key === 'total_balance')?.text || 'Общий баланс' }} </span>
             </div>
           </VCol>
         </VRow>

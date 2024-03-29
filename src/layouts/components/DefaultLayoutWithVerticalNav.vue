@@ -1,5 +1,6 @@
 <script setup>
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
+import router from '@/router'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import NumberAnimation from "vue-number-animation"
@@ -21,8 +22,17 @@ const isAuth = ref(localStorage.getItem('token') !== null)
 const logout = () => {
   localStorage.removeItem('token')
   isAuth.value = false
-  window.location.reload()
+  router.push('/login')
 }
+
+
+// get getTextsAdmin on mounted
+onMounted(() => {
+  $api.getTextsAdmin()
+    .then(res => {
+      localStorage.setItem('texts', JSON.stringify(res.data))
+    })
+})
 
 const balance = ref(0)
 
@@ -147,7 +157,7 @@ function startRedeem() {
         <span
           v-if="display.mdAndUp"
           class="lotus-h1 text-black"
-        >Мой баланс к выводу</span>
+        >{{ texts.find(t => t.key === 'available_balance').text || 'Баланс' }}</span>
         <span
           v-else
           class="lotus-h1 text-black"
@@ -190,21 +200,21 @@ function startRedeem() {
     <template #vertical-nav-content>
       <VerticalNavLink
         :item="{
-          title: 'Главная',
+          title: texts.find(t => t.key === 'menu_1')?.text || 'Главная',
           icon: 'bx-home',
           to: '/dashboard',
         }"
       />
       <VerticalNavLink
         :item="{
-          title: 'Финансы',
+          title: texts.find(t => t.key === 'menu_2')?.text || 'Финансы',
           icon: 'mdi-wallet',
           to: '/wallet',
         }"
       />
       <VerticalNavLink
         :item="{
-          title: 'Аккаунт',
+          title: texts.find(t => t.key === 'menu_3')?.text || 'Аккаунт',
           icon: 'mdi-account-cog-outline',
           to: '/account-settings',
         }"
@@ -213,7 +223,7 @@ function startRedeem() {
       <!-- 👉 Pages -->
       <VerticalNavSectionTitle
         :item="{
-          heading: 'Pages',
+          heading: texts.find(t => t.key === 'logout')?.text || 'Выйти',
         }"
       />
       <VerticalNavLink
@@ -235,7 +245,7 @@ function startRedeem() {
       <VerticalNavLink
         v-if="isAuth"
         :item="{
-          title: 'Logout',
+          title: texts.find(t => t.key === 'logout')?.text || 'Выйти',
           icon: 'bx-error',
         }"
         @click="logout"

@@ -29,6 +29,12 @@ $api.getReferralCode()
 
 $api.getUser()
 
+$api.getCountries()
+  .then(res => {
+    console.log(res.data.results)
+    countries.value = res.data.results
+  })
+  
 const saveChanges = () => {
   const data = {
     name: accountData.value.first_name,
@@ -50,16 +56,7 @@ function copyReferralCode () {
 }
 const verificationDialog = ref(false)
 
-const countries = [
-  'USA',
-  'Russia',
-  'Canada',
-  'Australia',
-  'Germany',
-  'France',
-  'Japan',
-  'China',
-]
+const countries = ref([])
 
 const images = reactive({
   first: null,
@@ -277,7 +274,9 @@ const verifyUser = () => {
             ><img :src="verifiedIcon"> Верифицирован</span>
           </VCol>
         </VRow>
-        <span class="lotus-text">Данные пользователя</span>
+        <p class="lotus-text mb-2 mt-6">
+          Данные пользователя
+        </p>
         
         <VForm
           v-model="validUser"
@@ -312,6 +311,8 @@ const verifyUser = () => {
                 v-model="accountData.country"
                 class="mb-4"
                 :items="countries"
+                item-title="name"
+                item-value="id"
                 label="Страна"
               />
               <VTextField
@@ -321,7 +322,7 @@ const verifyUser = () => {
             </VCol>
           </VRow>
           <button
-            class="mt-6 lotus-button1"
+            class="mt-4 mb-2 lotus-button1"
             :class="{ 'loading': isLoadingUser }"
             :disabled="isLoadingUser"
             @click="saveChanges"

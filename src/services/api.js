@@ -42,12 +42,6 @@ api.interceptors.response.use(response => {
 export default {
   async register(data) {
     const response = await api.post(`https://lotusinvest.world/api/register/`, data)
-    if (response.status === 201) {
-      toast(`Registered successfully`, {
-        "theme": "auto",
-        "type": "success",
-      })
-    }
     
     return await response
   },
@@ -131,13 +125,18 @@ export default {
     
     return await response
   },
+  async getCountries() {
+    const response = await api.get(`https://lotusinvest.world/api/countries/`)
+    
+    return await response
+  },
   async getTexts(lang) {
     const response = await api.get(`https://lotusinvest.world/api/texts/${lang}`)
     
     return await response
   },
-  async getTextsAdmin(lang) {
-    const response = await api.get(`https://lotusinvest.world/api/textsadmin/${lang}`)
+  async getTextsAdmin() {
+    const response = await api.get(`https://lotusinvest.world/api/textsadmin/`)
     
     return await response
   },

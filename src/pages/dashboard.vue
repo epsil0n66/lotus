@@ -4,6 +4,7 @@ import TotalEarnings from '@/components/TotalEarnings.vue'
 
 const $api = inject('api')
 const user = ref({})
+const texts = JSON.parse(localStorage.getItem('texts'))
 
 $api.getUser()
   .then(res => {
@@ -28,8 +29,11 @@ $api.getUser()
             order-sm="1"
           >
             <VCardItem>
-              <span class="lotus-h1 text-black">
-                Добро пожаловать, {{ user.name }}
+              <span
+                v-if="texts"
+                class="lotus-h1 text-black"
+              >
+                {{ texts.find(t => t.key === 'welcome').text }}, {{ user.name }}
               </span>
             </VCardItem>
 

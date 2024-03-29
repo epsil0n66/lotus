@@ -2,6 +2,8 @@
 import logo from '@images/logo.svg?raw'
 import { inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { toast } from "vue3-toastify"
+import "vue3-toastify/dist/index.css"
 
 const router = useRouter()
 
@@ -9,6 +11,18 @@ const $api = inject('api')
 
 const valid = ref(false)
 const isLoading = ref(false)
+
+// check from localstorage flag "registered" and show toast with success
+
+const isRegistered = localStorage.getItem('registered') === 'true'
+
+if (isRegistered) {
+  toast(`Registered successfully`, {
+    "theme": "auto",
+    "type": "success",
+  })
+  localStorage.setItem('registered', 'false')
+}
 
 const form = ref({
   email: null,

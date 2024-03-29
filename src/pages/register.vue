@@ -23,6 +23,7 @@ function register () {
   $api.register(form.value)
     .then(() => {
       isLoading.value = false
+      localStorage.setItem('registered', 'true')
       router.push('/login')
     })
     .catch(e => {
