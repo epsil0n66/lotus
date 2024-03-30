@@ -33,7 +33,7 @@ $api.getUser()
                 v-if="texts"
                 class="lotus-h1 text-black"
               >
-                {{ texts.find(t => t.key === 'welcome').text }}, {{ user.name }}
+                {{ texts.find(t => t.key === 'welcome')?.text || 'Добро пожаловать' }}, {{ user.name }}
               </span>
             </VCardItem>
 

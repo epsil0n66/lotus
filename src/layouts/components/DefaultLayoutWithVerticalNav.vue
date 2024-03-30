@@ -25,18 +25,27 @@ const logout = () => {
   router.push('/login')
 }
 
+const texts = ref([])
 
-// get getTextsAdmin on mounted
-onMounted(() => {
-  $api.getTextsAdmin()
-    .then(res => {
-      localStorage.setItem('texts', JSON.stringify(res.data))
-    })
-})
+;(async () => {
+
+  const res = await $api.getTextsAdmin()
+  const noTexts = localStorage.getItem('texts') === null
+
+  localStorage.setItem('texts', JSON.stringify(res.data))
+
+  texts.value = JSON.parse(localStorage.getItem('texts'))
+  if (noTexts) {
+    //refresh window
+    window.location.reload()
+  }
+})()
+
+
 
 const balance = ref(0)
 
-const texts = JSON.parse(localStorage.getItem('texts'))
+
 
 $api.getBalance()
   .then(res => {
@@ -157,7 +166,7 @@ function startRedeem() {
         <span
           v-if="display.mdAndUp"
           class="lotus-h1 text-black"
-        >{{ texts.find(t => t.key === 'available_balance').text || 'Баланс' }}</span>
+        >{{ texts.find(t => t.key === 'available_balance')?.text || 'Баланс' }}</span>
         <span
           v-else
           class="lotus-h1 text-black"
