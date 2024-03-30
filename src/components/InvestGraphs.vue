@@ -150,7 +150,7 @@ function confirm () {
             Стабильный рост
           </p>
           <p>
-            <span class="text-medium-emphasis lotus-text">
+            <span class="text-medium-emphasis lotus-text mr-2">
               {{ texts.find(t => t.key === 'from')?.text || 'От' }}
             </span>
             <span class="lotus-h1 text-black">{{ tariffPlan.threshold }} $</span>

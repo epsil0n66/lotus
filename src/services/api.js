@@ -130,11 +130,6 @@ export default {
     
     return await response
   },
-  async getTexts(lang) {
-    const response = await api.get(`https://lotusinvest.world/api/texts/${lang}`)
-    
-    return await response
-  },
   async getTextsAdmin() {
     const response = await api.get(`https://lotusinvest.world/api/textsadmin/`)
     
