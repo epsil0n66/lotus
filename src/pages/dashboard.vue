@@ -39,7 +39,7 @@ $api.getUser()
 
             <VCardText>
               <span class="lotus-text text-black">
-                Управление вашими финансами и вложениями в удобном формате
+                {{ texts.find(t => t.key === 'welcome_text')?.text || 'Управление вашими финансами и вложениями в удобном формате' }}:
               </span>
               <br>
             </VCardText>

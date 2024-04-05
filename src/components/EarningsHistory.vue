@@ -14,6 +14,8 @@ const earningsPageSize = ref(10)
 const isNextPage = ref(false)
 const isPrevPage = ref(false)
 
+const texts = JSON.parse(localStorage.getItem('texts'))
+
 const getEarnings = page => {
   $api.getEarnings(page)
     .then(res => {
@@ -30,7 +32,7 @@ getEarnings(earningsPage.value)
 
 <template>
   <VCard class="pa-6 my-4">
-    <span class="lotus-h1 text-black">История действий</span>
+    <span class="lotus-h1 text-black">{{ texts.find(t => t.key === 'history_of_action')?.text || 'История действий' }}</span>
     <div :style="mobile ? 'overflow-x: auto' : ''">
       <table
         :style="mobile ? 'width: 700px;' : 'width: 100%'"
@@ -42,25 +44,25 @@ getEarnings(earningsPage.value)
               class="text-left lotus-text text-black"
               style="border-bottom: 1px solid #e0e0e0;"
             >
-              Действие
+              {{ texts.find(t => t.key === 'action')?.text || 'Действие' }}
             </th>
             <th
               class="text-left lotus-text text-black"
               style="border-bottom: 1px solid #e0e0e0;"
             >
-              Тип
+              {{ texts.find(t => t.key === 'type')?.text || 'Тип' }}
             </th>
             <th
               class="text-left lotus-text text-black"
               style="border-bottom: 1px solid #e0e0e0;"
             >
-              Сумма
+              {{ texts.find(t => t.key === 'amount')?.text || 'Сумма' }}
             </th>
             <th
               class="text-left lotus-text text-black"
               style="border-bottom: 1px solid #e0e0e0;"
             >
-              Дата
+              {{ texts.find(t => t.key === 'date_action')?.text || 'Дата' }}
             </th>
           </tr>
         </thead>
@@ -98,7 +100,7 @@ getEarnings(earningsPage.value)
           :disabled="!isPrevPage"
           @click="getEarnings(earningsPage - 1)"
         >
-          ← Назад
+          ← {{ texts.find(t => t.key === 'prev_button')?.text || 'Назад' }}
         </button>
         <button
           class="lotus-button2"
@@ -106,7 +108,7 @@ getEarnings(earningsPage.value)
           style="margin-left: 12px;"
           @click="getEarnings(earningsPage + 1)"
         >
-          Вперед →
+          {{ texts.find(t => t.key === 'next_button')?.text || 'Вперед' }} →
         </button>
       </VCol>
       <VCol
@@ -114,7 +116,13 @@ getEarnings(earningsPage.value)
         md="6"
         class="d-flex justify-end"
       >
-        <span>Стр. <span class="page mx-2"> {{ earningsPage }} </span> из {{ earningsLastPage }}</span>
+        <span>{{ texts.find(t => t.key === 'page')?.text || 'Стр.' }} 
+          <input
+            v-model="earningsPage"
+            class="page mx-2"
+            type="text"
+            @keypress.enter="getEarnings(earningsPage)"
+          > {{ texts.find(t => t.key === 'from_2')?.text || 'из' }} {{ earningsLastPage }}</span>
       </VCol>
     </VRow>
   </VCard>

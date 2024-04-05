@@ -5,10 +5,11 @@ import verifiedIcon from '@images/icons/verified.svg'
 
 const $api = inject('api')
 
+const texts = JSON.parse(localStorage.getItem('texts'))
+
 const accountData = ref({
   first_name: '',
   last_name: '',
-  patronymic: '',
   verified: false,
   phone: '',
   date_of_birth: '',
@@ -35,21 +36,6 @@ $api.getCountries()
     countries.value = res.data.results
   })
   
-const saveChanges = () => {
-  const data = {
-    name: accountData.value.first_name,
-    phone: accountData.value.phone,
-  }
-
-  isLoadingUser.value = true
-  $api.updateUser(data)
-    .then(() => {
-      isLoadingUser.value = false
-    })
-    .catch(e => {
-      isLoadingUser.value = false
-    })
-}
 
 function copyReferralCode () {
   navigator.clipboard.writeText(referralCode.value)
@@ -109,8 +95,6 @@ const clearImage = zone => {
 }
 
 const validUser = ref(false)
-const isLoadingUser = ref(false)
-const validVerification = ref(false)
 const isLoadingVerification = ref(false)
 
 const verifyUser = () => {
@@ -118,12 +102,12 @@ const verifyUser = () => {
   const data = { ...accountData.value }
 
   delete data.verified 
-  data.first_name = 'Demo'
-  data.date_of_birth = '2000-01-01'
-  data.country = 1
-  data.photo_id = fileInput.value[0].files[0]
-  data.photo_selfie = fileInput.value[1].files[0]
-  data.photo_additional = fileInput.value[2].files[0]
+
+  if (fileInput.value) {
+    data.photo_id = fileInput.value[0].files[0]
+    data.photo_selfie = fileInput.value[1].files[0]
+    data.photo_additional = fileInput.value[2].files[0]
+  }
   
   const formData = new FormData()
 
@@ -133,12 +117,19 @@ const verifyUser = () => {
   isLoadingVerification.value = true
 
   $api.verifyUser(formData)
-    .then(() => {
+    .then(async () => {
       isLoadingVerification.value = false
       verificationDialog.value = false
       images.first = null
       images.second = null
       images.third = null
+
+      const res = await $api.getTextsAdmin()
+
+      localStorage.setItem('texts', JSON.stringify(res.data))
+      texts.value = JSON.parse(localStorage.getItem('texts'))
+      window.location.reload()
+
     })
     .catch(e => {
       isLoadingVerification.value = false
@@ -152,17 +143,17 @@ const verifyUser = () => {
     max-width="400"
   >
     <VCard class="pa-8">
+      <VBtn
+        icon="mdi-close"
+        variant="text"
+        class="align-self-end mr-n6 mt-n6"
+        @click="verificationDialog = false"
+      />
       <span class="lotus-h1 text-black">
-        Верификация
+        {{ texts.find(t => t.key === 'verification')?.text || 'Верификация' }}
       </span>
       <p class="lotus-text text-black mt-4 mb-2">
-        Загрузите фото:
-      </p>
-      <p class="lotus-text text-black mb-2">
-        • Паспорта (разворот 1 и 2 стр.)
-      </p>
-      <p class="lotus-text text-black mb-2">
-        • Селфи с открытым документов в руках
+        {{ texts.find(t => t.key === 'verification_data')?.text || 'Необходимо верифицировать аккаунт' }}
       </p>
       <div class="drop-zone-container mb-4">
         <div
@@ -201,7 +192,7 @@ const verifyUser = () => {
         </div>
       </div>
       <p class="lotus-text text-center mt-4">
-        Вставьте фото в форму или нажмите на поле для загрузки файлов
+        {{ texts.find(t => t.key === 'verification_popup')?.text || 'После загрузки фото нажмите кнопку «Верифицировать»' }}
       </p>
       <button
         class="lotus-button1"
@@ -214,7 +205,7 @@ const verifyUser = () => {
           class="loader"
         />
         <span v-else>
-          Верифицировать
+          {{ texts.find(t => t.key === 'verification_button')?.text || 'Верифицировать' }}
         </span>
       </button>
     </VCard>
@@ -226,7 +217,7 @@ const verifyUser = () => {
         md="8"
       >
         <p class="lotus-h1 text-black">
-          Настройка аккаунта
+          {{ texts.find(t => t.key === 'account_setting')?.text || 'Настройка аккаунта' }}
         </p>
         <VRow
           v-if="!accountData.verified"  
@@ -241,12 +232,10 @@ const verifyUser = () => {
               class="lotus-text"
               style="color: red;"
             >
-              Не верифицирован
+              {{ texts.find(t => t.key === 'not_verified')?.text || 'Не верифицирован' }}
             </p>
             <p class="lotus-text">
-              Загрузите фото: <br>
-              • Паспорта (разворот 1 и 2 стр.)<br>
-              • Селфи с открытым документов в руках <br>
+              {{ texts.find(t => t.key === 'verification_data')?.text || 'Необходимо верифицировать аккаунт' }}
             </p>
           </VCol>
           <VCol
@@ -258,7 +247,7 @@ const verifyUser = () => {
               class="lotus-button3"
               @click="verificationDialog = true"
             >
-              Верифицировать
+              {{ texts.find(t => t.key === 'verification_button')?.text || 'Верифицировать' }}
             </button>
           </VCol>
         </VRow>
@@ -271,16 +260,16 @@ const verifyUser = () => {
             <span
               class="lotus-text"
               style="color: #00ce2d;"
-            ><img :src="verifiedIcon"> Верифицирован</span>
+            ><img :src="verifiedIcon">{{ texts.find(t => t.key === 'verified')?.text || 'Верифицирован' }}</span>
           </VCol>
         </VRow>
         <p class="lotus-text mb-2 mt-6">
-          Данные пользователя
+          {{ texts.find(t => t.key === 'user_data')?.text || 'Данные пользователя' }}
         </p>
         
         <VForm
           v-model="validUser"
-          @submit.prevent="saveChanges"
+          @submit.prevent="verifyUser"
         >
           <VRow>
             <VCol
@@ -290,17 +279,12 @@ const verifyUser = () => {
               <VTextField
                 v-model="accountData.last_name"
                 class="mb-4"
-                label="Фамилия"
+                :label="texts.find(t => t.key === 'surname')?.text || 'Фамилия'"
               />
               <VTextField
                 v-model="accountData.first_name"
                 class="mb-4"
-                label="Имя"
-              />
-              <VTextField
-                v-model="accountData.patronymic"
-                class="mb-4"
-                label="Отчество"
+                :label="texts.find(t => t.key === 'name')?.text || 'Имя'"
               />
             </VCol>
             <VCol
@@ -313,25 +297,30 @@ const verifyUser = () => {
                 :items="countries"
                 item-title="name"
                 item-value="id"
-                label="Страна"
-              />
+                :label="texts.find(t => t.key === 'country')?.text || 'Страна'"
+              >
+                <template #selection="{ item }">
+                  <div style="color: black;">
+                    {{ item.raw.name }}
+                  </div>
+                </template>
+              </VSelect>
               <VTextField
                 v-model="accountData.phone"
-                label="Телефон"
+                :label="texts.find(t => t.key === 'phone')?.text || 'Телефон'"
               />
             </VCol>
           </VRow>
           <button
             class="mt-4 mb-2 lotus-button1"
-            :class="{ 'loading': isLoadingUser }"
-            :disabled="isLoadingUser"
-            @click="saveChanges"
+            :disabled="isLoadingVerification"
+            :class="{ 'loading': isLoadingVerification }"
           > 
             <span
-              v-if="isLoadingUser"
+              v-if="isLoadingVerification"
               class="loader"
             />
-            <span v-else>Сохранить изменения</span>
+            <span v-else>{{ texts.find(t => t.key === 'save_verification_button')?.text || 'Сохранить изменения' }}</span>
           </button>
         </VForm>
       </VCol>
@@ -341,10 +330,10 @@ const verifyUser = () => {
     <VRow>
       <VCol cols="12">
         <p class="lotus-h1 text-black">
-          Реферальная программа
+          {{ texts.find(t => t.key === 'invite_code')?.text || 'Реферальная ссылка' }}
         </p>
         <p class="lotus-text">
-          Приглашайте друзей и знакомых через реферальную ссылку и получайте дополнительный доход.
+          {{ texts.find(t => t.key === 'ref_text')?.text || 'Ссылка для приглашения друзей' }}
         </p>
         <span
           class="text-black"

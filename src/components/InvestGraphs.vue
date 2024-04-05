@@ -22,6 +22,7 @@ const currentTariff = ref({})
 const investDialog = ref(false)
 
 const investSum = ref(null)
+const consent = ref(false)
 
 const tariffOnHover = ref(null)
 
@@ -100,8 +101,14 @@ function confirm () {
     @click:outside="investDialog = false"
   >
     <VCard class="pa-8">
+      <VBtn
+        icon="mdi-close"
+        variant="text"
+        class="align-self-end mr-n6 mt-n6"
+        @click="investDialog = false"
+      />
       <span class="lotus-h1 text-black">
-        Программа: <span :style="`color: ${currentTariff.color}`">{{ currentTariff.name }}</span>
+        {{ texts.find(t => t.key === 'programm_small')?.text || 'Программа' }}: <span :style="`color: ${currentTariff.color}`">{{ currentTariff.name }}</span>
       </span>
       <VForm
         v-model="valid"
@@ -117,17 +124,26 @@ function confirm () {
           type="number"
           :rules="[(v) => !!v || 'Field is required', (v) => v >= currentTariff.threshold || `Must be greater than ${currentTariff.threshold}`]"
         />
-        <button
-          class="lotus-button1"
-          :class="{ 'loading': isLoading }"
-          :disabled="isLoading"
-        >
-          <span
-            v-if="isLoading"
-            class="loader"
+        <div class="d-flex mb-4">
+          <VCheckbox
+            v-model="consent"
+            :rules="[v => !!v || 'You must agree to continue!']"
           />
-          <span v-else>{{ texts.find(t => t.key === 'invest_button')?.text || 'Инвестировать' }}</span>
-        </button>
+          <span style=" margin-left: 6px;font-size: smaller;">Нажимая кнопку «Инвестировать» я соглашаюсь с условиями и суммой инвестирования</span>
+        </div>
+        <div class="d-flex justify-center">
+          <button
+            class="lotus-button1"
+            :class="{ 'loading': isLoading }"
+            :disabled="isLoading"
+          >
+            <span
+              v-if="isLoading"
+              class="loader"
+            />
+            <span v-else>{{ texts.find(t => t.key === 'invest_button')?.text || 'Инвестировать' }}</span>
+          </button>
+        </div>
       </VForm>
     </VCard>
   </VDialog>   
@@ -146,9 +162,6 @@ function confirm () {
             class="lotus-h1"
             :style="`color: ${tariffPlan.color}`"
           >{{ tariffPlan.name }}</span>
-          <p class="lotus-text text-black">
-            Стабильный рост
-          </p>
           <p>
             <span class="text-medium-emphasis lotus-text mr-2">
               {{ texts.find(t => t.key === 'from')?.text || 'От' }}

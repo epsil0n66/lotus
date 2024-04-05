@@ -73,7 +73,7 @@ export default {
   async verifyUser(data) {
     const response = await api.post(`https://lotusinvest.world/api/verify-user/`, data)
     
-    if (response.status === 201) {
+    if (response.status === 200) {
       toast(`Verification request sent`, {
         "theme": "auto",
         "type": "success",

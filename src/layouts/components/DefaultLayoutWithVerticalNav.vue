@@ -74,13 +74,13 @@ function onInput(event) {
 function startRedeem() {
   if (!valid.value) return
   redeemStatus.value = 'pending'
-  redeemDialogTitle.value = 'Обработка запроса'
+  redeemDialogTitle.value = texts.find(t => t.key === 'request_processing').text
   $api.withdraw({
     amount: redeemSum.value,
     wallet_address: redeemWallet.value,
   }).then(() => {
     redeemStatus.value = 'success'
-    redeemDialogTitle.value = 'Перевод одобрен'
+    redeemDialogTitle.value = texts.find(t => t.key === 'withdraw_accepted').text
     redeemSum.value = ''
     redeemWallet.value = ''
   })
@@ -93,6 +93,12 @@ function startRedeem() {
     max-width="400"
   >
     <VCard class="pa-8">
+      <VBtn
+        icon="mdi-close"
+        variant="text"
+        class="align-self-end mr-n6 mt-n6"
+        @click="redeemDialog = false"
+      />
       <span class="lotus-h1 text-black mb-4">
         {{ redeemDialogTitle }}
       </span>
@@ -131,7 +137,7 @@ function startRedeem() {
       </div>
       <div v-else-if="redeemStatus === 'success'">
         <span class="lotus-text text-black">
-          Ваш запрос на вывод средств одобрен, наш менеджер свяжется с вами в ближайшее время.
+          {{ texts.find(t => t.key === 'withdraw_accepted_text')?.text }}
         </span>
         <div class="d-flex justify-center mt-6">
           <button
@@ -166,17 +172,17 @@ function startRedeem() {
         <span
           v-if="display.mdAndUp"
           class="lotus-h1 text-black"
-        >{{ texts.find(t => t.key === 'available_balance')?.text || 'Баланс' }}</span>
+        >{{ texts.find(t => t.key === 'available_balance')?.text || 'Balance' }}</span>
         <span
           v-else
           class="lotus-h1 text-black"
-        >Баланс</span>
+        >{{ texts.find(t => t.key === 'available_balance')?.text || 'Balance' }}</span>
         <VSpacer />
         <span
-          v-if="balance < 100"
+          v-if="balance < 100 && display.mdAndUp"
           class="lotus-text"
           style=" padding: 3px 16px 4px;border-radius: 8px; background-color: #ffab0033;"
-        >Вывод средств доступен от <span
+        >{{ texts.find(t => t.key === 'withdrawals_available')?.text }} <span
           class="lotus=text"
           style="color: #ffab00;"
         >100$</span> </span>
@@ -197,7 +203,7 @@ function startRedeem() {
           :disabled="balance < 100"
           @click="redeemDialog = true"
         >
-          Вывести
+          {{ texts.find(t => t.key === 'withdraw_button')?.text || 'Вывести средства' }}
         </button>
 
         <!-- <NavbarThemeSwitcher class="me-2" /> -->

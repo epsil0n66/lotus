@@ -11,6 +11,7 @@ const $api = inject('api')
 
 const programmesShown = ref(false)
 const endProgramDialog = ref(false)
+const endProgramObject = ref({})
 
 const programmesInfo = ref([])
 
@@ -58,8 +59,14 @@ function showProgrammes() {
     @click:outside="investDialog = false"
   >
     <VCard class="pa-8">
+      <VBtn
+        icon="mdi-close"
+        variant="text"
+        class="align-self-end mr-n6 mt-n6"
+        @click="endProgramDialog = false"
+      />
       <span class="lotus-h1 text-black mb-6">
-        Программа: Стабильный рост
+        {{ texts.find(t => t.key === 'programm_small')?.text || 'Программа' }}: {{ endProgramObject.tariff_plan_name }}
       </span>
       <span class="lotus-text text-black text-center mb-6">Нажимая кнопку «Завершить» вы останавливаете процесс программы, тем самым останавливая накопления инвестиционного счёта</span>
       <div class="d-flex justify-center">
@@ -75,7 +82,7 @@ function showProgrammes() {
           style="margin-left: 12px;"
           @click="endProgramDialog = false"
         >
-          Завершить
+          {{ texts.find(t => t.key === 'close_invest')?.text || 'Завершить' }}
         </button>
       </div>
     </VCard>
@@ -164,7 +171,7 @@ function showProgrammes() {
   >
     <VRow>
       <VCol cols="12">
-        <span class="lotus-h1 text-black">Мои программы</span>
+        <span class="lotus-h1 text-black">{{ texts.find(t => t.key === 'my_programms')?.text || 'Мои программы' }}</span>
         <div :style="mobile ? 'overflow-x: auto' : ''">
           <table
             :style="mobile ? 'width: 700px;' : 'width: 100%'"
@@ -173,16 +180,16 @@ function showProgrammes() {
             <thead>
               <tr>
                 <th class="text-left lotus-text text-black">
-                  Программа
+                  {{ texts.find(t => t.key === 'programm_small')?.text || 'Программа' }}
                 </th>
                 <th class="text-left lotus-text text-black">
-                  Вложения
+                  {{ texts.find(t => t.key === 'investings')?.text || 'Вложения' }}
                 </th>
                 <th class="text-left lotus-text text-black">
-                  Дата инвестиций
+                  {{ texts.find(t => t.key === 'investing_day')?.text || 'Дата инвестиций' }}
                 </th>
                 <th class="text-left lotus-text text-black">
-                  Заработано
+                  {{ texts.find(t => t.key === 'earned')?.text || 'Заработано' }}
                 </th>
                 <th />
               </tr>
@@ -203,9 +210,9 @@ function showProgrammes() {
                 <td>
                   <button
                     class="lotus-button4"
-                    @click="endProgramDialog = true"
+                    @click="endProgramDialog = true; endProgramObject = programme"
                   >
-                    Завершить
+                    {{ texts.find(t => t.key === 'close_invest')?.text || 'Завершить' }}
                   </button>
                 </td>
               </tr>

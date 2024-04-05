@@ -31,10 +31,10 @@ loadWallet()
         md="6"
       >
         <p class="lotus-h1 text-black">
-          Генерация ссылки USDT
+          {{ texts.find(t => t.key === 'generation_address')?.text || 'Генерация ссылки USDT' }}
         </p>
         <p class="lotus-text">
-          Адрес
+          {{ texts.find(t => t.key === 'address')?.text || 'Адрес' }}
         </p>
         <p
           v-if="!verified"
